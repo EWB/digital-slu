@@ -91,7 +91,6 @@ function drush_radix($name = NULL, $machine_name = NULL) {
   }
 
   // Make a fresh copy of the kit.
-  // $kit_path = drush_normalize_path(drush_core_drupal_directory('radix') . '/kits/' . $kit);
   $kit_path = drush_normalize_path(drush_get_context('DRUSH_DRUPAL_ROOT') . '/' . drupal_get_path('theme', 'radix') . '/kits/' . $kit);
   if (!is_dir(dirname($subtheme_path))) {
     drush_die(dt('The directory "!directory" was not found.', array('!directory' => dirname($subtheme_path))));
@@ -115,7 +114,7 @@ function drush_radix($name = NULL, $machine_name = NULL) {
       $bootswatch_path = $subtheme_path . '/assets/sass/bootswatch/';
       drush_move_dir($dirname . '/radix-bootswatch-master/' . $bootswatch, $bootswatch_path, TRUE);
     }
-
+    
     // Set working directory back to the previous working directory.
     chdir($current_dir);
   }
@@ -141,18 +140,10 @@ function drush_radix($name = NULL, $machine_name = NULL) {
   drush_op('radix_file_str_replace', $subtheme_path . '/theme-settings.php', '{{machine_name}}', $machine_name);
 
   // Notify user of the newly created theme.
-  $message = 'Radix subtheme "!name" created in: !path using the "!kit" kit';
-
-  // Add bootstwatch to message.
-  if ($bootswatch != '') {
-    $message .= ' and the "!bootswatch" bootswatch theme';
-  }
-
-  $message = dt($message . '.', array(
+  $message = dt('Radix subtheme "!name" created in: !path using the "!kit" kit.', array(
     '!name' => $name,
     '!path' => $subtheme_path,
     '!kit' => $kit,
-    '!bootswatch' => $bootswatch,
   ));
   drush_print($message);
 }

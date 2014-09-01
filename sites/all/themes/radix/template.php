@@ -12,8 +12,6 @@ require_once dirname(__FILE__) . '/includes/menu.inc';
 require_once dirname(__FILE__) . '/includes/comment.inc';
 require_once dirname(__FILE__) . '/includes/panel.inc';
 require_once dirname(__FILE__) . '/includes/view.inc';
-require_once dirname(__FILE__) . '/includes/admin.inc';
-require_once dirname(__FILE__) . '/includes/contrib.inc';
 
 /**
  * Implementation of template_preprocess_html().
@@ -54,28 +52,12 @@ function radix_css_alter(&$css) {
  * Implements hook_js_alter().
  */
 function radix_js_alter(&$javascript) {
-  // Add radix-modal when required.
+  // Add radix-modal only when required.
   $ctools_modal = drupal_get_path('module', 'ctools') . '/js/modal.js';
   $radix_modal = drupal_get_path('theme', 'radix') . '/assets/javascripts/radix-modal.js';
   if (!empty($javascript[$ctools_modal]) && empty($javascript[$radix_modal])) {
     $javascript[$radix_modal] = array_merge(
       drupal_js_defaults(), array('group' => JS_THEME, 'data' => $radix_modal));
-  }
-
-  // Add radix-field-slideshow when required.
-  $field_slideshow = drupal_get_path('module', 'field_slideshow') . '/field_slideshow.js';
-  $radix_field_slideshow = drupal_get_path('theme', 'radix') . '/assets/javascripts/radix-field-slideshow.js';
-  if (!empty($javascript[$field_slideshow]) && empty($javascript[$radix_field_slideshow])) {
-    $javascript[$radix_field_slideshow] = array_merge(
-      drupal_js_defaults(), array('group' => JS_THEME, 'data' => $radix_field_slideshow));
-  }
-
-  // Add radix-progress when required.
-  $progress = 'misc/progress.js';
-  $radix_progress = drupal_get_path('theme', 'radix') . '/assets/javascripts/radix-progress.js';
-  if (!empty($javascript[$progress]) && empty($javascript[$radix_progress])) {
-    $javascript[$radix_progress] = array_merge(
-      drupal_js_defaults(), array('group' => JS_THEME, 'data' => $radix_progress));
   }
 }
 
@@ -85,11 +67,9 @@ function radix_js_alter(&$javascript) {
 function radix_preprocess_page(&$variables) {
   global $base_url;
 
-  // Add Bootstrap JS from CDN if bootstrap library is not installed.
-  if (!module_exists('bootstrap_library')) {
-    $base = parse_url($base_url);
-    drupal_add_js($base['scheme'] . '://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js', 'external');
-  }
+  // Add Bootstrap JS.
+  $base = parse_url($base_url);
+  drupal_add_js($base['scheme'] . '://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js', 'external');
 
   // Add CSS for Font Awesome
   // drupal_add_css('//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css', 'external');
@@ -114,7 +94,6 @@ function radix_preprocess_page(&$variables) {
   $variables['search_form'] = '';
   if (module_exists('search') && user_access('search content')) {
     $search_box_form = drupal_get_form('search_form');
-    //jfl $search_box_form = drupal_get_form('search_block_form');
     $search_box_form['basic']['keys']['#title'] = '';
     $search_box_form['basic']['keys']['#size'] = 20;
     $search_box_form['basic']['keys']['#attributes'] = array('placeholder' => 'Search');
@@ -138,15 +117,14 @@ function radix_preprocess_page(&$variables) {
   $variables['copyright'] = t('Drupal is a registered trademark of Dries Buytaert.');
 
   // Display a message if Sass has not been compiled.
-  $theme_path = drupal_get_path('theme',$GLOBALS['theme']);
-  $stylesheet_path = $theme_path . '/assets/stylesheets/screen.css';
+  $stylesheet_path = path_to_theme() . '/assets/stylesheets/screen.css';
   if (_radix_current_theme() == 'radix') {
-    $stylesheet_path = $theme_path . '/assets/stylesheets/radix-style.css';
+    $stylesheet_path = path_to_theme() . '/assets/stylesheets/radix-style.css';
   }
   if (!file_exists($stylesheet_path)) {
-    drupal_set_message(t('It looks like %path has not been created yet. Run <code>@command</code> in your theme directory to create it.', array(
-      '%path' => $stylesheet_path,
-      '@command' => 'compass watch',
+    drupal_set_message(t('It looks like !path has not been created yet. Run !command in your theme directory to create it.', array(
+      '!path' => '<em>' . $stylesheet_path . '</em>',
+      '!command' => '<code>compass watch</code>',
     )), 'error');
   }
 }

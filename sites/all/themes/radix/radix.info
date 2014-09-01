@@ -30,9 +30,9 @@ core = "7.x"
 project = "radix"
 datestamp = "1393170697"
 
-; Information added by Drupal.org packaging script on 2014-05-01
-version = "7.x-3.0-alpha4"
+; Information added by Drupal.org packaging script on 2014-02-26
+version = "7.x-3.0-alpha3"
 core = "7.x"
 project = "radix"
-datestamp = "1398941032"
+datestamp = "1393454007"
 

@@ -10,16 +10,6 @@
  * @see html.tpl.php
  */
 ?>
-<!-- ewb -->
-<div id="top_bar_container">
-      <div id="top_bar">
-        <div id="slu">
-        <a href="http://www.stlawu.edu"><img id="stlaw" src="http://dev.stlawu.edu/ksp/sites/default/files/topbar_stlawu.png" alt="St. Lawrence University" /></a>
-         </div>
-      </div> 
-</div>       
-<!-- ewb done -->
-
 <header id="header" class="header" role="header">
   <div class="container">
     <nav class="navbar navbar-default" role="navigation">
