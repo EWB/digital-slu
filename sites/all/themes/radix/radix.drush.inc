@@ -91,7 +91,40 @@ function drush_radix($name = NULL, $machine_name = NULL) {
   }
 
   // Make a fresh copy of the kit.
+  // $kit_path = drush_normalize_path(drush_core_drupal_directory('radix') . '/kits/' . $kit);
   $kit_path = drush_normalize_path(drush_get_context('DRUSH_DRUPAL_ROOT') . '/' . drupal_get_path('theme', 'radix') . '/kits/' . $kit);
+
+  // Allow kits to be pulled from external urls.
+  if (valid_url($kit, TRUE)) {
+    $kit_url = $kit;
+    $kit_name = 'kit';
+
+    // Get kit name from kit url.
+    if (preg_match("/\/radix\-kit\-([a-z0-9\_]*)\//", $kit_url, $matches)) {
+      $kit_name = $kit = $matches[1];
+    }
+
+    // Switch to a temp directory.
+    $current_dir = getcwd();
+    chdir(drush_tempdir());
+
+    drush_print(dt('Downloading @kit_name from @kit_url...', array(
+      '@kit_name' => (!empty($kit_name)) ? $kit_name . ' kit' : $kit_name,
+      '@kit_url' => $kit_url,
+    )));
+    if ($filepath = drush_download_file($kit_url)) {
+      $filename = basename($filepath);
+      $dirname =  basename($filepath, '.zip');
+
+      // Decompress the zip archive.
+      drush_tarball_extract($filename, $dirname, TRUE);
+      $kit_path = getcwd() . '/' . $dirname . '/radix-kit-' . $kit_name . '-master';
+
+      // Set working directory back to the previous working directory.
+      chdir($current_dir);
+    }
+  }
+
   if (!is_dir(dirname($subtheme_path))) {
     drush_die(dt('The directory "!directory" was not found.', array('!directory' => dirname($subtheme_path))));
   }
@@ -114,7 +147,7 @@ function drush_radix($name = NULL, $machine_name = NULL) {
       $bootswatch_path = $subtheme_path . '/assets/sass/bootswatch/';
       drush_move_dir($dirname . '/radix-bootswatch-master/' . $bootswatch, $bootswatch_path, TRUE);
     }
-    
+
     // Set working directory back to the previous working directory.
     chdir($current_dir);
   }
@@ -140,10 +173,18 @@ function drush_radix($name = NULL, $machine_name = NULL) {
   drush_op('radix_file_str_replace', $subtheme_path . '/theme-settings.php', '{{machine_name}}', $machine_name);
 
   // Notify user of the newly created theme.
-  $message = dt('Radix subtheme "!name" created in: !path using the "!kit" kit.', array(
+  $message = 'Successfully created the Radix subtheme "!name" created in: !path using the "!kit" kit';
+
+  // Add bootstwatch to message.
+  if ($bootswatch != '') {
+    $message .= ' and the "!bootswatch" bootswatch theme';
+  }
+
+  $message = dt($message . '.', array(
     '!name' => $name,
     '!path' => $subtheme_path,
     '!kit' => $kit,
+    '!bootswatch' => $bootswatch,
   ));
   drush_print($message);
 }

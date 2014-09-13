@@ -332,7 +332,29 @@ function radix_pager($variables) {
     }
     return '<div class="text-center">' . theme('item_list', array(
       'items' => $items,
-      'attributes' => array('class' => array('pagination')),
+      'attributes' => array('class' => array('pagination', 'pager')),
     )) . '</div>';
   }
+}
+
+/**
+ * Returns HTML for a progress bar.
+ *
+ * Note that the core Batch API uses this only for non-JavaScript batch jobs.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - percent: The percentage of the progress.
+ *   - message: A string containing information to be displayed.
+ */
+function radix_progress_bar($variables) {
+  $output = '<div class="progress-wrapper">';
+  $output .= '<div id="progress" class="progress progress-striped">';
+  $output .= '<div class="bar progress-bar-primary" role="progressbar" aria-valuenow="' . $variables['percent'] . '" aria-valuemin="0" aria-valuemax="100" style="width: ' . $variables['percent'] . '%"></div>';
+  $output .= '</div>';
+  $output .= '<div class="percentage pull-right">' . $variables['percent'] . '%</div>';
+  $output .= '<div class="message">' . $variables['message'] . '</div>';
+  $output .= '</div>';
+
+  return $output;
 }

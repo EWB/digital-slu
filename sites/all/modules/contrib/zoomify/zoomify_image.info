@@ -1,0 +1,13 @@
+name = Zoomify handler for Image
+description = "Adds the Zoomify Viewer to the core Image module".
+package = Image
+core = 7.x
+php = 5
+dependencies[] = image
+dependencies[] = zoomify
+; Information added by drupal.org packaging script on 2012-08-23
+version = "7.x-1.0-beta5"
+core = "7.x"
+project = "zoomify"
+datestamp = "1345692166"
+
