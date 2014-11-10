@@ -11,13 +11,7 @@
  */
 ?>
 <!-- ewb -->
-<div id="top_bar_container">
-      <div id="top_bar">
-        <div id="slu">
-        <a href="http://www.stlawu.edu"><img id="stlaw" src="http://dev.stlawu.edu/ksp/sites/all/themes/digitalradix/images/slu-horizontal-white.png" alt="St. Lawrence University" height="38"/></a>
-         </div>
-      </div> 
-</div>       
+     
 <!-- ewb done -->
 
 <header id="header" class="header" role="header">

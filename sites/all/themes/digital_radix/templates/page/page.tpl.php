@@ -37,11 +37,31 @@
 
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="navbar-collapse">
-        <?php if ($main_menu): ?>
+        <?php if (FALSE && $main_menu): ?>
           <ul id="main-menu" class="menu nav navbar-nav">
             <?php print render($main_menu); ?>
           </ul>
         <?php endif; ?>
+        
+        <!-- John's OG Menu -->
+        <?php $block = module_invoke('og_menu','block_view','og_single_menu_block');?>
+        <?php if (!empty($block)): ?>
+          <ul id="main-menu" class="menu nav navbar-nav">
+            <?php
+              //dsm($block);
+              //$block['content']['id'] = 'main-menu';
+              print render($block['content']);
+            ?>
+          </ul>
+        <?php else: ?>
+          <?php if ($main_menu): ?>
+            <ul id="main-menu" class="menu nav navbar-nav">
+              <?php print render($main_menu); ?>
+            </ul>
+          <?php endif; ?>
+        <?php endif; ?>
+        <!-- /John's OG Menu -->
+        
         <?php if ($search_form): ?>
           <?php print $search_form; ?>
         <?php endif; ?>
